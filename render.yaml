@@ -14,3 +14,12 @@ services:
         value: 0.0.0.0
       - key: CMMS_STORAGE_DIR
         value: /tmp/ozminda-cmms
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ozminda-cmms-db
+          property: connectionString
+
+databases:
+  - name: ozminda-cmms-db
+    plan: free
+    region: frankfurt
