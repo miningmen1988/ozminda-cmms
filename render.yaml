@@ -1,0 +1,16 @@
+services:
+  - type: web
+    runtime: node
+    name: ozminda-cmms
+    plan: free
+    region: frankfurt
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CMMS_HOST
+        value: 0.0.0.0
+      - key: CMMS_STORAGE_DIR
+        value: /tmp/ozminda-cmms

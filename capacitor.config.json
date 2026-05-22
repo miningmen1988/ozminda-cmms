@@ -1,0 +1,8 @@
+{
+  "appId": "com.ozminda.cmms",
+  "appName": "O'zMinda CMMS",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

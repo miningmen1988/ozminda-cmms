@@ -1,0 +1,19 @@
+{
+  "name": "O'zMinda CMMS",
+  "short_name": "O'zMinda",
+  "description": "Mobile CMMS interface for equipment, press forms, inventory and maintenance.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2f5f7",
+  "theme_color": "#0b2235",
+  "icons": [
+    {
+      "src": "ozminda-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

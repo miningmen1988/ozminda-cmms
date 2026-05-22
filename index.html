@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>O'zMinda CMMS</title>
+  <meta name="theme-color" content="#0b2235">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="O'zMinda CMMS">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="ozminda-icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=76">
+</head>
+<body>
+  <div id="auth-screen" class="auth-screen">
+    <form id="login-form" class="auth-card">
+      <p class="eyebrow" id="login-eyebrow">O'zMinda CMMS</p>
+      <h2 id="login-title">Sign In</h2>
+      <p id="login-subtitle">Use your username and password to enter the system.</p>
+      <label>
+        <span id="login-username-label">Username</span>
+        <input id="login-username" name="username" type="text" autocomplete="username" required>
+      </label>
+      <label>
+        <span id="login-password-label">Password</span>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <p id="login-error" class="login-error" hidden></p>
+      <button type="submit" class="primary-btn" id="login-submit">Login</button>
+    </form>
+  </div>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="ozminda-logo.svg" alt="O'zMinda">
+        <div>
+          <h1 id="brand-company-name">O'zMinda LLC</h1>
+          <p data-i18n="brandSubtitle">Smart CMMS Platform</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-link active" data-view="dashboard">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h8V3H3v10zm10 8h8V11h-8v10zM3 21h8v-6H3v6zm10-18v6h8V3h-8z"/></svg></span>
+          <span class="nav-label">Dashboard</span>
+        </button>
+        <button class="nav-link nav-parent-link" data-nav-group="equipment" data-view="assets">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V6l-8-4zm0 3.2 5 2.5V12c0 3.7-2.3 7.3-5 8.3-2.7-1-5-4.6-5-8.3V7.7l5-2.5z"/></svg></span>
+          <span class="nav-label">Equipments</span>
+        </button>
+        <div class="nav-submenu" id="equipment-submenu">
+          <button class="nav-link nav-link-sub" data-nav-group="equipment" data-view="inventory" data-nav-label="nav.inventory"><span class="nav-label">Склад</span></button>
+          <button class="nav-link nav-link-sub" data-nav-group="equipment" data-view="criticalParts" data-nav-label="nav.criticalParts"><span class="nav-label">Критические запасные части</span></button>
+          <button class="nav-link nav-link-sub" data-nav-group="equipment" data-view="workorders" data-nav-label="nav.workorders"><span class="nav-label">Ежедневные неисправности</span></button>
+          <button class="nav-link nav-link-sub" data-nav-group="equipment" data-view="pm" data-nav-label="nav.pm"><span class="nav-label">ППР</span></button>
+        </div>
+        <button class="nav-link nav-parent-link" data-nav-group="pressForms" data-view="pressForms">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v6H4V4zm2 2v2h12V6H6zm-2 6h16v8H4v-8zm2 2v4h4v-4H6zm6 0v4h6v-4h-6z"/></svg></span>
+          <span class="nav-label">Пресс формы</span>
+        </button>
+        <div class="nav-submenu" id="press-forms-submenu">
+          <button class="nav-link nav-link-sub" data-nav-group="pressForms" data-view="inventory" data-nav-label="nav.inventory"><span class="nav-label">Склад</span></button>
+          <button class="nav-link nav-link-sub" data-nav-group="pressForms" data-view="criticalParts" data-nav-label="nav.criticalParts"><span class="nav-label">Критические запасные части</span></button>
+          <button class="nav-link nav-link-sub" data-nav-group="pressForms" data-view="workorders" data-nav-label="nav.workorders"><span class="nav-label">Ежедневные неисправности</span></button>
+          <button class="nav-link nav-link-sub" data-nav-group="pressForms" data-view="pm" data-nav-label="nav.pm"><span class="nav-label">ППР</span></button>
+        </div>
+        <button class="nav-link" data-view="settings">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a7.6 7.6 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A7.6 7.6 0 0 0 7 6L4.6 5 2.6 8.5l2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a7.6 7.6 0 0 0 2.6 1.5L10 22h4l.4-2.5A7.6 7.6 0 0 0 17 18l2.4 1 2-3.5-2-1.5ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg></span>
+          <span class="nav-label">Настройки</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-card">
+        <p class="eyebrow" data-i18n="nextStepLabel">Next step</p>
+        <h2 data-i18n="addBackendTitle">Backend can be added</h2>
+        <p data-i18n="addBackendText">This prototype already stores data locally and is ready to move to an API.</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <div class="topbar-title">
+          <p class="eyebrow" id="site-name-label" data-i18n="plantLabel">Production site</p>
+          <h2 id="view-title">Dashboard</h2>
+          <span id="view-context-chip" class="context-chip"></span>
+        </div>
+        <div class="topbar-actions">
+          <label class="topbar-control language-control">
+            <span class="topbar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm6.9 8h-3.2a13.8 13.8 0 0 0-1.1-5 7.04 7.04 0 0 1 4.3 5ZM12 5.1c.7 1 1.4 2.9 1.7 5.9h-3.4c.3-3 1-4.9 1.7-5.9ZM5.1 13h3.2c.1 1.9.5 3.6 1.1 5a7.04 7.04 0 0 1-4.3-5Zm3.2-2H5.1a7.04 7.04 0 0 1 4.3-5 13.8 13.8 0 0 0-1.1 5Zm3.7 7.9c-.7-1-1.4-2.9-1.7-5.9h3.4c-.3 3-1 4.9-1.7 5.9Zm2.6-.9c.6-1.4 1-3.1 1.1-5h3.2a7.04 7.04 0 0 1-4.3 5Z"/></svg>
+            </span>
+            <select id="language-switcher" class="language-switcher" aria-label="Language">
+              <option value="ru">Русский</option>
+              <option value="uz">O'zbekcha</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <div class="topbar-control clock-control">
+            <span class="topbar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm11 8H6v10h12V10ZM6 8h12V6H6v2Zm7 4h2v4h3v2h-5v-6Z"/></svg>
+            </span>
+            <div id="real-time-clock" class="real-time-clock"></div>
+          </div>
+          <label class="topbar-control search-control">
+            <span class="topbar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 0 1 5.16 10.45l4.44 4.45-1.41 1.41-4.44-4.44A6.5 6.5 0 1 1 10.5 4Zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z"/></svg>
+            </span>
+            <input id="global-search" type="search" placeholder="Search work orders, assets, technicians">
+          </label>
+          <div class="notification-center">
+            <button class="topbar-control notification-btn" id="notification-btn" type="button" aria-label="Notifications" aria-expanded="false">
+              <span class="topbar-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 22a2.6 2.6 0 0 0 2.5-2h-5a2.6 2.6 0 0 0 2.5 2Zm7-6-2-2v-4.5A5.5 5.5 0 0 0 12.8 4V2h-1.6v2A5.5 5.5 0 0 0 7 9.5V14l-2 2v2h14v-2Z"/></svg>
+              </span>
+              <strong id="notification-count">0</strong>
+            </button>
+            <div class="notification-popover" id="notification-popover" hidden>
+              <div class="notification-popover-head">
+                <strong data-i18n="dashboardAlertsTitle">Notifications</strong>
+                <span id="notification-critical-count">0</span>
+              </div>
+              <div id="notification-list" class="notification-list"></div>
+            </div>
+          </div>
+          <div class="session-chip" id="session-chip">
+            <span class="session-avatar" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-3.3 0-6 1.7-6 3.8V20h12v-2.2c0-2.1-2.7-3.8-6-3.8Z"/></svg>
+            </span>
+            <span class="session-copy">
+              <strong id="session-name">Guest</strong>
+              <span id="session-role">Viewer</span>
+            </span>
+          </div>
+          <button class="ghost-btn backup-btn icon-text-btn" id="backup-btn" type="button" hidden>
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 4 6v5c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-3Zm0 2.2 6 2.2V11c0 3.8-2.2 6.5-6 7.9-3.8-1.4-6-4.1-6-7.9V7.4l6-2.2Zm-1 9.2 5-5 1.4 1.4-6.4 6.4-3.4-3.4L9 12.4l2 2Z"/></svg>
+            </span>
+            <span class="btn-label">Backup</span>
+          </button>
+          <button class="ghost-btn icon-text-btn" id="logout-btn" type="button">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M10 4h8v16h-8v-2h6V6h-6V4Zm-1.6 4.6L9.8 10H3v2h6.8l-1.4 1.4L9.8 15.8 14 11.6 9.8 7.4 8.4 8.6Z"/></svg>
+            </span>
+            <span class="btn-label">Logout</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboard-view">
+        <div class="dashboard-type-switch" aria-label="Тип панели">
+          <button class="dashboard-type-btn active" type="button" data-dashboard-type="asset" data-i18n="dashboardType.assets">Оборудование</button>
+          <button class="dashboard-type-btn" type="button" data-dashboard-type="pressForm" data-i18n="dashboardType.pressForms">Пресс формы</button>
+        </div>
+        <div class="stats-grid dashboard-stats-grid">
+          <article class="stat-card dashboard-json-kpi">
+            <p class="eyebrow">JSON ДАННЫЕ</p>
+            <h3 id="dashboard-total-faults">0</h3>
+            <p>Записи неисправностей</p>
+          </article>
+          <article class="stat-card dashboard-json-kpi">
+            <p class="eyebrow">КРИТИЧНЫЕ</p>
+            <h3 id="dashboard-critical-faults">0</h3>
+            <p>Высокий риск обслуживания</p>
+          </article>
+          <article class="stat-card dashboard-json-kpi">
+            <p class="eyebrow">ОБОРУДОВАНИЕ</p>
+            <h3 id="dashboard-equipment-count">0</h3>
+            <p>Единиц в реестре</p>
+          </article>
+          <article class="stat-card dashboard-json-kpi">
+            <p class="eyebrow">OEE</p>
+            <h3 id="dashboard-oee">0%</h3>
+            <p>Production effectiveness</p>
+          </article>
+        </div>
+
+        <section class="panel dashboard-kpi-panel">
+          <div class="panel-head dashboard-kpi-head">
+            <div>
+              <p class="eyebrow" data-i18n="dashboardKpiEyebrow">KPI analytics</p>
+              <h3 data-i18n="dashboardKpiTitle">MTBF, MTTR & OEE</h3>
+              <p data-i18n="dashboardKpiSubtitle">Overall plant KPI with a filter for each equipment.</p>
+            </div>
+            <select id="dashboard-kpi-asset-filter" class="asset-toolbar-select" aria-label="Dashboard KPI asset filter"></select>
+          </div>
+          <div id="dashboard-kpi-board" class="dashboard-kpi-board"></div>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel chart-panel wide-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">JSON ДИАГРАММА</p>
+                <h3>Поток статусов</h3>
+              </div>
+            </div>
+            <div id="status-flow-chart" class="dashboard-chart"></div>
+          </section>
+
+          <section class="panel chart-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">ПРИОРИТЕТ</p>
+                <h3>Структура неисправностей</h3>
+              </div>
+            </div>
+            <div id="priority-donut-chart" class="dashboard-chart"></div>
+          </section>
+        </div>
+
+        <div class="dashboard-ops-grid">
+          <section class="panel dashboard-alert-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="dashboardAlertsEyebrow">CMMS control</p>
+                <div class="panel-title-line">
+                  <h3 data-i18n="dashboardAlertsTitle">Notifications</h3>
+                  <span id="dashboard-alert-count" class="panel-count">0</span>
+                </div>
+              </div>
+              <div class="panel-actions-row">
+                <button class="ghost-btn small-btn" id="export-csv-btn" type="button" data-i18n="exportCsvBtn">Export CSV</button>
+                <button class="ghost-btn small-btn" id="export-report-btn" type="button" data-i18n="exportReportBtn">Report</button>
+              </div>
+            </div>
+            <div id="dashboard-alert-summary" class="dashboard-alert-summary"></div>
+            <div id="dashboard-alerts" class="dashboard-alert-list"></div>
+          </section>
+
+          <section class="panel dashboard-activity-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="auditEyebrow">History</p>
+                <h3 data-i18n="auditTitle">Latest Actions</h3>
+              </div>
+            </div>
+            <div id="dashboard-audit-log" class="dashboard-audit-list"></div>
+          </section>
+        </div>
+
+      </section>
+
+      <section class="view" id="workorders-view">
+        <div class="daily-faults-shell">
+          <section class="panel daily-faults-hero">
+            <div>
+              <p class="eyebrow" data-i18n="dailyFaultsEyebrow">Daily maintenance log</p>
+              <h3 data-i18n="dailyFaultsTitle">Daily Faults</h3>
+              <p data-i18n="dailyFaultsSubtitle">One place for incoming faults, active work, equipment links, and response status.</p>
+            </div>
+            <div id="daily-faults-kpis" class="daily-faults-kpis"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head daily-faults-head">
+              <div class="panel-title-line">
+                <h3 data-i18n="dailyFaultsListTitle">Fault Journal</h3>
+                <span id="daily-faults-count" class="panel-count"></span>
+              </div>
+              <div class="quick-filter-bar" id="daily-faults-quick-filters" aria-label="Quick fault filters"></div>
+              <div class="filters">
+                <select id="status-filter">
+                  <option value="all" data-i18n="allStatuses">All statuses</option>
+                  <option value="Open">Open</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Waiting Parts">Waiting Parts</option>
+                  <option value="Waiting Technician">Waiting Technician</option>
+                  <option value="On Hold">On Hold</option>
+                  <option value="Repaired">Repaired</option>
+                  <option value="Done">Done</option>
+                  <option value="New">New</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Waiting">Waiting</option>
+                </select>
+                <select id="priority-filter">
+                  <option value="all" data-i18n="allPriorities">All priorities</option>
+                  <option value="Critical">Critical</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+                <button class="primary-btn add-daily-fault-btn" id="add-daily-fault-btn" type="button">
+                  <span aria-hidden="true">+</span>
+                  <span data-i18n="addBtn">Добавить</span>
+                </button>
+              </div>
+            </div>
+            <div id="daily-faults-list" class="daily-faults-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="assets-view">
+        <div class="asset-layout asset-registry-workspace">
+          <section class="panel asset-registry-panel">
+            <div class="panel-head">
+              <div class="panel-title-line">
+                <h3 data-i18n="assetsRegistry">Equipment Registry</h3>
+                <span id="assets-count" class="panel-count"></span>
+              </div>
+              <div class="asset-toolbar">
+                <select id="asset-health-filter" class="asset-toolbar-select" aria-label="Asset health filter"></select>
+                <select id="asset-criticality-filter" class="asset-toolbar-select" aria-label="Asset criticality filter"></select>
+                <select id="asset-location-filter" class="asset-toolbar-select" aria-label="Asset location filter"></select>
+                <select id="asset-sort" class="asset-toolbar-select" aria-label="Asset sort"></select>
+                <button class="ghost-btn add-section-btn asset-qr-print-btn" id="print-asset-qr-btn" type="button">
+                  <span class="btn-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 3h10v5H7V3Zm2 2v1h6V5H9Zm-3 4h12a3 3 0 0 1 3 3v5h-4v4H7v-4H3v-5a3 3 0 0 1 3-3Zm3 10h6v-5H9v5Zm8-4h2v-3a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v3h2v-3h10v3Z"/></svg>
+                  </span>
+                  <span data-i18n="printAssetQrBtn">Печать QR</span>
+                </button>
+                <button class="primary-btn add-section-btn" id="add-asset-btn" type="button">
+                  <span aria-hidden="true">+</span>
+                  <span data-i18n="addBtn">Добавить</span>
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap asset-table-wrap">
+              <table class="equipment-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="thId">ID</th>
+                    <th data-i18n="photoColumn">Photo</th>
+                    <th data-i18n="thTitle">Title</th>
+                    <th data-i18n="field.model">Model</th>
+                    <th data-i18n="field.serialNumber">Serial Number</th>
+                    <th data-i18n="thLocation">Location</th>
+                    <th data-i18n="detailHealth">Health</th>
+                    <th data-i18n="detailCriticality">Criticality</th>
+                    <th data-i18n="actionsColumn">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="assets-grid"></tbody>
+              </table>
+            </div>
+          </section>
+          <aside class="panel asset-quick-panel" id="asset-detail-panel" aria-live="polite"></aside>
+        </div>
+      </section>
+
+      <section class="view" id="pressForms-view">
+        <div class="asset-layout">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title-line">
+                <h3 data-i18n="pressFormsRegistry">Реестр пресс форм</h3>
+                <span id="press-forms-count" class="panel-count"></span>
+              </div>
+              <button class="primary-btn add-section-btn" id="add-press-form-btn" type="button">
+                <span aria-hidden="true">+</span>
+                <span data-i18n="addBtn">Добавить</span>
+              </button>
+            </div>
+            <div class="table-wrap asset-table-wrap">
+              <table class="equipment-table press-forms-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="thId">ID</th>
+                    <th data-i18n="photoColumn">Фото</th>
+                    <th data-i18n="thTitle">Title</th>
+                    <th data-i18n="field.model">Model</th>
+                    <th data-i18n="field.serialNumber">Serial Number</th>
+                    <th data-i18n="field.cavityCount">Гнезда</th>
+                    <th data-i18n="thLocation">Location</th>
+                    <th data-i18n="detailHealth">Health</th>
+                    <th data-i18n="actionsColumn">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="press-forms-grid"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="requests-view">
+        <div class="panel-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h3 data-i18n="incomingRequests">Incoming Requests</h3>
+            </div>
+            <div id="requests-list" class="pm-list"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head">
+              <h3 data-i18n="requestSummary">Request Summary</h3>
+            </div>
+            <div id="request-summary" class="stack-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="inventory-view">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-line">
+              <h3 data-i18n="inventoryTitle">Inventory & Parts</h3>
+              <span id="inventory-count" class="panel-count"></span>
+            </div>
+            <button class="primary-btn add-section-btn" id="add-inventory-btn" type="button">
+              <span aria-hidden="true">+</span>
+              <span data-i18n="addBtn">Добавить</span>
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="thPart">Part</th>
+                  <th data-i18n="thSku">SKU</th>
+                  <th data-i18n="thOnHand">On Hand</th>
+                  <th data-i18n="thMinQty">Min Qty</th>
+                  <th data-i18n="thLocation">Location</th>
+                  <th data-i18n="inventorySupplier">Supplier</th>
+                  <th data-i18n="inventoryPrice">Price</th>
+                  <th data-i18n="thStatus">Status</th>
+                  <th data-i18n="actionsColumn">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="criticalParts-view">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-line">
+              <h3 data-i18n="criticalPartsTitle">Критические запасные части</h3>
+              <span id="critical-parts-count" class="panel-count"></span>
+            </div>
+            <button class="primary-btn add-section-btn" id="add-critical-part-btn" type="button">
+              <span aria-hidden="true">+</span>
+              <span data-i18n="addBtn">Добавить</span>
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="thPart">Part</th>
+                  <th data-i18n="thSku">SKU</th>
+                  <th data-i18n="thOnHand">On Hand</th>
+                  <th data-i18n="thMinQty">Min Qty</th>
+                  <th data-i18n="thLocation">Location</th>
+                  <th data-i18n="inventorySupplier">Supplier</th>
+                  <th data-i18n="inventoryPrice">Price</th>
+                  <th data-i18n="criticalPartRisk">Risk</th>
+                  <th data-i18n="actionsColumn">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="critical-parts-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="pm-view">
+        <section class="panel pm-list-panel">
+          <div class="panel-head">
+            <div class="panel-title-line">
+              <h3 data-i18n="pmTitle">Preventive Maintenance</h3>
+              <span id="pm-count" class="panel-count"></span>
+            </div>
+            <button class="primary-btn add-section-btn" id="add-pm-btn" type="button">
+              <span aria-hidden="true">+</span>
+              <span data-i18n="addBtn">Добавить</span>
+            </button>
+          </div>
+          <div id="pm-list" class="pm-table-list"></div>
+        </section>
+        <section class="panel pm-calendar-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow" data-i18n="pmCalendarEyebrow">Calendar</p>
+              <h3 data-i18n="pmCalendarTitle">PM Schedule</h3>
+            </div>
+          </div>
+          <div id="pm-calendar" class="pm-calendar"></div>
+        </section>
+      </section>
+
+      <section class="view" id="users-view">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-line">
+              <h3 data-i18n="teamRoles">Team & Roles</h3>
+              <span id="users-count" class="panel-count"></span>
+            </div>
+            <button class="primary-btn add-section-btn" id="add-user-btn" type="button">
+              <span aria-hidden="true">+</span>
+              <span data-i18n="addBtn">Добавить</span>
+            </button>
+          </div>
+          <div id="users-grid" class="asset-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="settings-view">
+        <div class="settings-grid">
+          <section class="panel settings-panel settings-company-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="settingsCompanyEyebrow">Company</p>
+                <h3 data-i18n="settingsCompanyTitle">Company Profile</h3>
+              </div>
+            </div>
+            <div class="settings-form">
+              <label class="settings-field">
+                <span data-i18n="settingsCompanyName">Company name</span>
+                <input id="settings-company-name" type="text" autocomplete="organization">
+              </label>
+              <label class="settings-field">
+                <span data-i18n="settingsCompanySite">Production site</span>
+                <input id="settings-company-site" type="text">
+              </label>
+              <button class="primary-btn settings-save-btn" id="settings-company-save-btn" type="button" data-i18n="saveSettingsBtn">Save</button>
+            </div>
+          </section>
+
+          <section class="panel settings-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="settingsInterfaceEyebrow">Interface</p>
+                <h3 data-i18n="settingsInterfaceTitle">Interface Settings</h3>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <strong data-i18n="settingsLanguageTitle">Language</strong>
+                <span data-i18n="settingsLanguageText">Choose the display language.</span>
+              </div>
+              <select id="settings-language-switcher" class="asset-toolbar-select" aria-label="Settings language">
+                <option value="ru">Русский</option>
+                <option value="uz">O'zbekcha</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="panel settings-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="settingsAccountEyebrow">Account</p>
+                <h3 data-i18n="settingsAccountTitle">Current User</h3>
+              </div>
+            </div>
+            <div class="settings-profile">
+              <span class="settings-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-3.3 0-6 1.7-6 3.8V20h12v-2.2c0-2.1-2.7-3.8-6-3.8Z"/></svg>
+              </span>
+              <div>
+                <strong id="settings-user-name">Guest</strong>
+                <span id="settings-user-role">Role: -</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel settings-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="settingsDataEyebrow">Data</p>
+                <h3 data-i18n="settingsDataTitle">Data & Backup</h3>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <strong data-i18n="settingsBackupTitle">Backup</strong>
+                <span id="settings-backup-status"></span>
+              </div>
+              <button class="primary-btn settings-backup-btn" id="settings-backup-btn" type="button">Backup</button>
+            </div>
+            <div class="settings-row">
+              <div>
+                <strong data-i18n="settingsStorageTitle">Storage</strong>
+                <span id="settings-storage-mode"></span>
+              </div>
+              <span class="settings-version">v0.1</span>
+            </div>
+          </section>
+
+          <section class="panel settings-panel settings-telegram-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="settingsTelegramEyebrow">Notifications</p>
+                <h3 data-i18n="settingsTelegramTitle">Telegram</h3>
+              </div>
+              <label class="settings-toggle">
+                <input id="settings-telegram-enabled" type="checkbox">
+                <span data-i18n="settingsTelegramEnabled">Enabled</span>
+              </label>
+            </div>
+            <div class="settings-form">
+              <label class="settings-field">
+                <span data-i18n="settingsTelegramBotToken">Bot token</span>
+                <input id="settings-telegram-token" type="password" autocomplete="off" placeholder="123456:ABC...">
+              </label>
+              <label class="settings-field">
+                <span data-i18n="settingsTelegramChatId">Chat ID</span>
+                <input id="settings-telegram-chat-id" type="text" autocomplete="off" placeholder="-1001234567890">
+              </label>
+              <div class="settings-actions-row">
+                <button class="primary-btn settings-save-btn" id="settings-telegram-save-btn" type="button" data-i18n="saveSettingsBtn">Save</button>
+                <button class="ghost-btn settings-telegram-test-btn" id="settings-telegram-test-btn" type="button" data-i18n="settingsTelegramTest">Test</button>
+              </div>
+              <p class="settings-panel-note" id="settings-telegram-status" data-i18n="settingsTelegramHelp">Create a bot in BotFather, paste token and chat ID.</p>
+            </div>
+          </section>
+
+          <section class="panel settings-panel settings-users-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow" data-i18n="settingsAccessEyebrow">Access</p>
+                <div class="panel-title-line">
+                  <h3 data-i18n="settingsAccessTitle">Users & Access</h3>
+                  <span id="settings-users-count" class="panel-count">0</span>
+                </div>
+              </div>
+              <button class="primary-btn settings-add-user-btn" id="settings-add-user-btn" type="button">
+                <span aria-hidden="true">+</span>
+                <span data-i18n="settingsAddUser">Add user</span>
+              </button>
+            </div>
+            <p class="settings-panel-note" data-i18n="settingsAccessSubtitle">Manage login accounts, roles, and access level.</p>
+            <div id="settings-users-list" class="settings-users-list"></div>
+          </section>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <dialog id="workorder-modal">
+    <form method="dialog" id="entity-form" class="modal-form">
+      <div class="modal-head">
+        <h3 id="modal-title">New Work Order</h3>
+        <button type="button" class="ghost-btn" id="close-modal-btn" data-i18n="closeBtn">Close</button>
+      </div>
+      <div id="modal-fields" class="modal-fields"></div>
+      <button type="submit" class="primary-btn full" id="modal-submit">Save</button>
+    </form>
+  </dialog>
+
+  <dialog id="asset-detail-modal" class="asset-detail-dialog">
+    <div class="asset-detail-modal-shell">
+      <div class="modal-head asset-detail-modal-head">
+        <h3 id="asset-detail-modal-title">Equipment Card</h3>
+        <button type="button" class="ghost-btn" id="close-asset-detail-modal-btn" data-i18n="closeBtn">Close</button>
+      </div>
+      <div id="asset-detail-modal-body" class="asset-detail-modal-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="stock-move-modal" class="stock-move-dialog">
+    <form id="stock-move-form" class="modal-form stock-move-form">
+      <div class="modal-head">
+        <h3 id="stock-move-title" data-i18n="stockMoveTitle">Stock movement</h3>
+        <button type="button" class="ghost-btn" id="close-stock-move-modal-btn" data-i18n="closeBtn">Close</button>
+      </div>
+      <input id="stock-move-part-id" type="hidden">
+      <div id="stock-move-summary" class="stock-move-summary"></div>
+      <div class="stock-move-fields">
+        <label>
+          <span data-i18n="stockMoveType">Movement</span>
+          <select id="stock-move-type"></select>
+        </label>
+        <label>
+          <span data-i18n="stockMoveQty">Quantity</span>
+          <input id="stock-move-qty" type="number" min="1" step="1" value="1" required>
+        </label>
+        <label class="stock-move-note-field">
+          <span data-i18n="stockMoveNote">Comment</span>
+          <textarea id="stock-move-note" rows="2"></textarea>
+        </label>
+      </div>
+      <p id="stock-move-error" class="settings-panel-note stock-move-error" hidden></p>
+      <button type="submit" class="primary-btn full" data-i18n="saveStockMoveBtn">Save movement</button>
+      <section class="stock-move-history-block">
+        <div class="panel-title-line">
+          <h4 data-i18n="stockMoveHistory">Movement history</h4>
+        </div>
+        <div id="stock-move-history" class="stock-move-history"></div>
+      </section>
+    </form>
+  </dialog>
+
+  <script type="module" src="app.js?v=89"></script>
+</body>
+</html>

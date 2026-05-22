@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="O'zMinda">
+  <rect width="512" height="512" rx="112" fill="#103653"/>
+  <rect x="82" y="148" width="348" height="216" rx="40" fill="#ffffff"/>
+  <path d="M99 331 C164 240, 239 190, 326 175 C374 166, 408 170, 438 181" fill="none" stroke="#61cdf8" stroke-width="11" stroke-linecap="round"/>
+  <path d="M303 175 C363 166, 407 169, 438 181 L393 244 C372 219, 333 211, 289 213 Z" fill="#1d99d8"/>
+  <path d="M393 244 L438 181 C455 188, 469 198, 480 211 L480 364 L374 364 C392 330, 399 287, 393 244 Z" fill="#1656ad"/>
+  <path d="M303 174 L303 198" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  <path d="M438 181 L418 200" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  <text x="124" y="345" fill="#1b56a7" font-family="Trebuchet MS, Arial, sans-serif" font-size="44" font-weight="700">O'zMinda</text>
+</svg>

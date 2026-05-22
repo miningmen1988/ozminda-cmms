@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 90" role="img" aria-label="O'zMinda logo">
+  <rect width="240" height="90" fill="#ffffff"/>
+  <path d="M6 81 C42 40, 83 17, 129 11 C164 7, 193 10, 222 20" fill="none" stroke="#61cdf8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M114 11 C156 7, 189 9, 222 20 L192 56 C179 40, 152 34, 126 35 Z" fill="#1d99d8"/>
+  <path d="M192 56 L222 20 C229 23, 234 27, 238 31 L238 81 L181 81 C190 73, 194 65, 192 56 Z" fill="#1656ad"/>
+  <path d="M114 10 L114 22" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M222 20 L210 30" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+  <text x="28" y="77" fill="#1b56a7" font-family="Trebuchet MS, Manrope, sans-serif" font-size="19" font-weight="500" letter-spacing="0.01em">O'zMinda</text>
+</svg>
