@@ -9,9 +9,13 @@ const storageRoot = process.env.CMMS_STORAGE_DIR ? path.resolve(process.env.CMMS
 const dataDir = process.env.CMMS_DATA_DIR ? path.resolve(process.env.CMMS_DATA_DIR) : path.join(storageRoot, "data");
 const storePath = path.join(dataDir, "store.json");
 const backupDir = process.env.CMMS_BACKUP_DIR ? path.resolve(process.env.CMMS_BACKUP_DIR) : path.join(storageRoot, "backups");
+const databaseUrl = String(process.env.DATABASE_URL || "").trim();
 const port = Number(process.env.PORT || 8001);
 const defaultHost = process.env.NODE_ENV === "production" ? "0.0.0.0" : "127.0.0.1";
 const host = (process.env.CMMS_HOST || process.env.HOST || defaultHost).trim() || defaultHost;
+const databaseStateId = "primary";
+let databasePool = null;
+let databaseStoreReady = null;
 
 const demoUsers = [
   { id: "USR-501", name: "Gene Simmons", role: "Planner", username: "planner", password: "planner123", userStatus: "Active", team: "Production", workload: 7, shift: "Day" },
@@ -92,6 +96,19 @@ async function readJsonBody(req, maxBytes = 60 * 1024 * 1024) {
 }
 
 async function readStore() {
+  if (databaseUrl) {
+    await ensureDatabaseStore();
+    const result = await getDatabasePool().query(
+      "SELECT payload FROM cmms_state WHERE id = $1",
+      [databaseStateId]
+    );
+    return result.rows[0]?.payload || {};
+  }
+
+  return readJsonStore();
+}
+
+async function readJsonStore() {
   try {
     const raw = await fs.readFile(storePath, "utf8");
     return JSON.parse(raw);
@@ -102,7 +119,6 @@ async function readStore() {
 }
 
 async function writeStore(data) {
-  await fs.mkdir(dataDir, { recursive: true });
   const payload = {
     ...data,
     meta: {
@@ -111,13 +127,83 @@ async function writeStore(data) {
       revision: crypto.randomUUID()
     }
   };
-  await fs.writeFile(storePath, JSON.stringify(payload, null, 2), "utf8");
+
+  if (databaseUrl) {
+    await writeDatabaseStore(payload);
+  } else {
+    await writeJsonStore(payload);
+  }
+
   try {
     await createDailyBackup(payload);
   } catch (error) {
     console.warn("Daily backup failed:", error.message);
   }
   return payload;
+}
+
+async function writeJsonStore(payload) {
+  await fs.mkdir(dataDir, { recursive: true });
+  await fs.writeFile(storePath, JSON.stringify(payload, null, 2), "utf8");
+}
+
+function getDatabasePool() {
+  if (!databasePool) {
+    const { Pool } = require("pg");
+    databasePool = new Pool({ connectionString: databaseUrl });
+    databasePool.on("error", (error) => {
+      console.error("PostgreSQL pool error:", error.message || error);
+    });
+  }
+
+  return databasePool;
+}
+
+async function ensureDatabaseStore() {
+  if (!databaseStoreReady) {
+    databaseStoreReady = (async () => {
+      const pool = getDatabasePool();
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS cmms_state (
+          id text PRIMARY KEY,
+          payload jsonb NOT NULL,
+          updated_at timestamptz NOT NULL DEFAULT now()
+        )
+      `);
+      const existing = await pool.query(
+        "SELECT id FROM cmms_state WHERE id = $1",
+        [databaseStateId]
+      );
+      if (existing.rowCount) return;
+
+      const localState = await readJsonStore();
+      if (Object.keys(localState || {}).length) {
+        await pool.query(
+          "INSERT INTO cmms_state (id, payload, updated_at) VALUES ($1, $2::jsonb, now())",
+          [databaseStateId, JSON.stringify(localState)]
+        );
+      }
+    })().catch((error) => {
+      databaseStoreReady = null;
+      throw error;
+    });
+  }
+
+  return databaseStoreReady;
+}
+
+async function writeDatabaseStore(payload) {
+  await ensureDatabaseStore();
+  await getDatabasePool().query(
+    `
+      INSERT INTO cmms_state (id, payload, updated_at)
+      VALUES ($1, $2::jsonb, now())
+      ON CONFLICT (id) DO UPDATE
+      SET payload = EXCLUDED.payload,
+          updated_at = EXCLUDED.updated_at
+    `,
+    [databaseStateId, JSON.stringify(payload)]
+  );
 }
 
 function mergeDemoUsers(users) {
@@ -413,6 +499,7 @@ async function handleApi(req, res, url) {
       service: "O'zMinda CMMS Backend",
       host,
       port,
+      storage: databaseUrl ? "postgres" : "json",
       lanEnabled: host === "0.0.0.0" || host === "::",
       localUrl,
       lanUrl,
